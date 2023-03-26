@@ -9,6 +9,26 @@ public class BatteryStatusPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result("iOS " + UIDevice.current.systemVersion)
+    if call.method == "getPlatformVersion" {
+      result("iOS " + UIDevice.current.systemVersion)
+    } else if call.method == "isCharging" {
+      UIDevice.current.isBatteryMonitoringEnabled = true
+      if UIDevice.current.batteryState == .unknown {
+        result(nil)
+      } else if UIDevice.current.batteryState == .charging || UIDevice.current.batteryState == .full {
+        result(true)
+      } else {
+        result(false)
+      }
+    } else if call.method == "value" {
+      UIDevice.current.isBatteryMonitoringEnabled = true
+      if UIDevice.current.batteryState == .unknown {
+        result(nil)
+      } else {
+        result(Double(UIDevice.current.batteryLevel))
+      }
+    } else {
+      result(FlutterMethodNotImplemented)
+    }
   }
 }

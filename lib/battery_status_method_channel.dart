@@ -11,7 +11,20 @@ class MethodChannelBatteryStatus extends BatteryStatusPlatform {
 
   @override
   Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+    final version =
+        await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
+  }
+
+  @override
+  Future<bool?> isCharging() async {
+    final isCharging = await methodChannel.invokeMethod<bool?>('isCharging');
+    return isCharging;
+  }
+
+  @override
+  Future<double?> value() async {
+    final value = await methodChannel.invokeMethod<double?>('value');
+    return value;
   }
 }

@@ -24,6 +24,14 @@ abstract class BatteryStatusPlatform extends PlatformInterface {
   }
 
   Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
+    throw UnimplementedError('base');
+  }
+
+  Future<bool?> isCharging() {
+    throw UnimplementedError('base');
+  }
+
+  Future<double?> value() {
+    throw UnimplementedError('base');
   }
 }

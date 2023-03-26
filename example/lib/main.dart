@@ -16,13 +16,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   final _batteryStatusPlugin = BatteryStatus();
+
+  String _platformVersion = 'Unknown';
+  bool? _isCharging;
+  double? _value;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    initBatteryIsCharging();
+    initBatteryValue();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -31,8 +36,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _batteryStatusPlugin.getPlatformVersion() ?? 'Unknown platform version';
+      platformVersion = await _batteryStatusPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -47,15 +52,55 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> initBatteryIsCharging() async {
+    bool? isCharging;
+    try {
+      isCharging = await _batteryStatusPlugin.isCharging();
+    } on PlatformException {
+      isCharging = null;
+    }
+    if (!mounted) return;
+    setState(() {
+      _isCharging = isCharging;
+    });
+  }
+
+  Future<void> initBatteryValue() async {
+    double? value;
+    try {
+      value = await _batteryStatusPlugin.value();
+    } on PlatformException {
+      value = null;
+    }
+    if (!mounted) return;
+    setState(() {
+      _value = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Battery Status Example'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Running on: $_platformVersion\n'),
+              _isCharging == null || _value == null
+                  ? const Icon(Icons.question_mark_rounded)
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.bolt_rounded),
+                        Text("${(_value! * 100).toInt()}")
+                      ],
+                    )
+            ],
+          ),
         ),
       ),
     );
