@@ -26,6 +26,10 @@ public class BatteryStatusPlugin implements FlutterPlugin, MethodCallHandler {
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
     if (call.method.equals("getPlatformVersion")) {
       result.success("Android " + android.os.Build.VERSION.RELEASE);
+    } else if (call.method.equals("isCharging")) {
+      // TODO
+    } else if (call.method.equals("value")) {
+      // TODO
     } else {
       result.notImplemented();
     }
