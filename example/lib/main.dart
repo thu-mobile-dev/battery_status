@@ -92,13 +92,15 @@ class _MyAppState extends State<MyApp> {
               Text('Running on: $_platformVersion\n'),
               _isCharging == null || _value == null
                   ? const Icon(Icons.question_mark_rounded)
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.bolt_rounded),
-                        Text("${(_value! * 100).toInt()}")
-                      ],
-                    )
+                  : _isCharging!
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.bolt_rounded),
+                            Text("${(_value! * 100).toInt()}")
+                          ],
+                        )
+                      : Text("${(_value! * 100).toInt()}")
             ],
           ),
         ),
